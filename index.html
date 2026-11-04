@@ -223,6 +223,20 @@ footer { display: flex; align-items: center; justify-content: space-between; gap
 .rings i:nth-child(3) { animation-delay: -5.33s; }
 @keyframes implode { 0% { transform: scale(1); opacity: 0; } 30% { opacity: .5; } 92% { opacity: .9; } 100% { transform: scale(0); opacity: 0; } }
 
+/* ---------- Folie 9: Der Schwarze Zwerg ruht lange, ein seltener Funke, dann Kollaps und ein letzter Blitz. Alles läuft im selben 16-Sekunden-Takt ---------- */
+.dwarf { position: relative; width: 10rem; height: 10rem; }
+.dwarf i { position: absolute; border-radius: 50%; }
+.dwarf .husk { inset: 2.2rem; background: radial-gradient(circle at 35% 30%, #2C2A44, #08070F 70%); box-shadow: 0 0 1.2rem rgba(201, 184, 224, .22); animation: collapse 16s ease-in infinite; }
+@keyframes collapse { 0%, 76% { transform: scale(1); opacity: 1; } 84% { transform: scale(.18); opacity: 1; } 85%, 96% { transform: scale(.18); opacity: 0; } 96.1% { transform: scale(1); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+.dwarf .spark { z-index: 1; width: .22rem; height: .22rem; background: #fff; box-shadow: 0 0 .5rem .1rem var(--hot); opacity: 0; animation: spark 16s linear infinite; }
+@keyframes spark { 0%, 8%, 100% { opacity: 0; } 4% { opacity: 1; } }
+.dwarf .blast { inset: 2.2rem; background: radial-gradient(circle, #fff, var(--hot) 35%, transparent 70%); opacity: 0; animation: blast 16s ease-out infinite; }
+@keyframes blast { 0%, 84% { transform: scale(.1); opacity: 0; } 86% { transform: scale(1); opacity: 1; } 100% { transform: scale(5); opacity: 0; } }
+.flash { position: absolute; inset: 0; z-index: -1; background: radial-gradient(circle at 18% 42%, rgba(255, 240, 210, .5), transparent 65%); opacity: 0; animation: lastlight 16s ease-out infinite; }
+@keyframes lastlight { 0%, 84%, 100% { opacity: 0; } 87% { opacity: 1; } }
+.points.tight { gap: .8rem; }
+.points.tight li { font-size: 1rem; }
+
 /* ---------- Navigation am Rand, nur auf großen Bildschirmen ---------- */
 .nav { position: fixed; right: .3rem; top: 50%; transform: translateY(-50%); display: grid; z-index: 2; }
 .nav a { display: grid; place-items: center; width: 2.2rem; height: 2rem; }
@@ -279,7 +293,7 @@ footer { display: flex; align-items: center; justify-content: space-between; gap
   .js section .rv, .js section .rv.l, .js section .rv.r, .js section .rv.z, .js section:not(.in) .w { opacity: 1; transform: none; filter: none; }
   .js section:not(.in) .ring .val { stroke-dashoffset: 84.5; }
   .js section:not(.in) .line::before, .js section:not(.in) .line li::before { transform: none; }
-  .burst i, .fx, .space, .rings, .meteors, .dusk { display: none; }
+  .burst i, .fx, .space, .rings, .meteors, .dusk, .flash, .dwarf .blast, .dwarf .spark { display: none; }
 }
 </style>
 </head>
@@ -291,24 +305,25 @@ footer { display: flex; align-items: center; justify-content: space-between; gap
   <a href="#f1" aria-label="Folie 1: Titel"></a>
   <a href="#f2" aria-label="Folie 2: Urknall heißt nicht: Anfang von allem"></a>
   <a href="#f3" aria-label="Folie 3: Die ersten Momente"></a>
-  <a href="#f4" aria-label="Folie 4: Warum wir das glauben"></a>
-  <a href="#f5" aria-label="Folie 5: Gab es einen echten Anfang?"></a>
-  <a href="#f6" aria-label="Folie 6: Die Dunkle Energie entscheidet"></a>
-  <a href="#f7" aria-label="Folie 7: Ende 1: Der Wärmetod"></a>
-  <a href="#f8" aria-label="Folie 8: Ende 2 und 3: Zwei schnellere Enden"></a>
-  <a href="#f9" aria-label="Folie 9: Die Antwort"></a>
-  <a href="#f10" aria-label="Folie 10: Quellen"></a>
+  <a href="#f4" aria-label="Folie 4: Gab es einen echten Anfang?"></a>
+  <a href="#f5" aria-label="Folie 5: Die Dunkle Energie entscheidet"></a>
+  <a href="#f6" aria-label="Folie 6: Zwei schnelle Enden"></a>
+  <a href="#f7" aria-label="Folie 7: Das Gas geht aus"></a>
+  <a href="#f8" aria-label="Folie 8: Der lange Abschied"></a>
+  <a href="#f9" aria-label="Folie 9: Das Allerletzte: eine Supernova"></a>
+  <a href="#f10" aria-label="Folie 10: Die Antwort"></a>
+  <a href="#f11" aria-label="Folie 11: Quellen"></a>
 </nav>
 
 <main>
 <section id="f1" class="both in">
   <div class="burst" aria-hidden="true"><i></i><i></i><i></i></div>
   <div class="body">
-    <h1 class="rv">Hatte das Universum einen Anfang, und hat es ein Ende?</h1>
-    <p class="sub rv">Was die Kosmologie heute belegen kann und wo sie an ihre Grenze kommt</p>
+    <h1 class="rv">Hatte das Universum einen Anfang, und was passiert als Allerletztes?</h1>
+    <p class="sub rv">Von den ersten Sternen bis zum letzten Ereignis, das je stattfinden wird</p>
     <div class="temp rv" aria-hidden="true"></div>
   </div>
-  <footer><p class="src">Wischen, scrollen oder Pfeiltasten</p><div class="pager"><span>1 / 10</span><a href="#f2">Weiter</a></div></footer>
+  <footer><p class="src">Wischen, scrollen oder Pfeiltasten</p><div class="pager"><span>1 / 11</span><a href="#f2">Weiter</a></div></footer>
 </section>
 
 <section id="f2" class="hot">
@@ -323,7 +338,7 @@ footer { display: flex; align-items: center; justify-content: space-between; gap
       </div>
     </div>
   </div>
-  <footer><p class="src">Quelle: [1] Planck: 13,797 ± 0,023 Mrd. Jahre; [2] NASA</p><div class="pager"><a href="#f1">Zurück</a><span>2 / 10</span><a href="#f3">Weiter</a></div></footer>
+  <footer><p class="src">Quelle: [1] Planck: 13,797 ± 0,023 Mrd. Jahre; [2] NASA</p><div class="pager"><a href="#f1">Zurück</a><span>2 / 11</span><a href="#f3">Weiter</a></div></footer>
 </section>
 
 <section id="f3" class="hot">
@@ -337,22 +352,10 @@ footer { display: flex; align-items: center; justify-content: space-between; gap
       <li class="rv" style="--c:#C9B8E0;--d:.8rem;--i:4"><strong>280 Millionen Jahre</strong><p>MoM-z14, die fernste bestätigte Galaxie</p></li>
     </ol>
   </div>
-  <footer><p class="src">Quelle: [2] NASA; [3] Guth; [4] Naidu et al.</p><div class="pager"><a href="#f2">Zurück</a><span>3 / 10</span><a href="#f4">Weiter</a></div></footer>
+  <footer><p class="src">Quelle: [2] NASA; [3] Guth; [4] Naidu et al.</p><div class="pager"><a href="#f2">Zurück</a><span>3 / 11</span><a href="#f4">Weiter</a></div></footer>
 </section>
 
-<section id="f4" class="hot">
-  <h2 class="rv">Warum wir das glauben</h2>
-  <div class="body">
-    <div class="grid3">
-      <article class="card rv z"><div class="ico gal" aria-hidden="true"><i style="--x:-1.5rem;--dl:0s"></i><i style="--x:1.5rem;--dl:-1s"></i><i style="--x:-.8rem;--dl:-2s"></i><i style="--x:.8rem;--dl:-.5s"></i></div><h3 style="margin:.8rem 0 .5rem">Galaxien entfernen sich.</h3><p>Je weiter weg, desto schneller. Hubble zeigte das 1929.</p></article>
-      <article class="card rv z"><div class="ico atom" aria-hidden="true"><i></i><i></i></div><h3 style="margin:.8rem 0 .5rem">Die leichten Elemente passen.</h3><p>Ihre Häufigkeit stimmt insgesamt mit der Rechnung für die ersten Minuten überein.</p></article>
-      <article class="card rv z"><div class="ico echo" aria-hidden="true"><i></i><i></i><i></i></div><h3 style="margin:.8rem 0 .5rem">Das Nachglühen ist messbar.</h3><p>Penzias und Wilson maßen die Hintergrundstrahlung 1965, Planck kartierte sie später präzise.</p></article>
-    </div>
-  </div>
-  <footer><p class="src">Quelle: [5] Hubble; [6] Particle Data Group; [7] Penzias &amp; Wilson; [1] Planck</p><div class="pager"><a href="#f3">Zurück</a><span>4 / 10</span><a href="#f5">Weiter</a></div></footer>
-</section>
-
-<section id="f5" class="both">
+<section id="f4" class="both">
   <h2 class="rv">Gab es einen echten Anfang?</h2>
   <div class="body">
     <div class="rows">
@@ -362,10 +365,10 @@ footer { display: flex; align-items: center; justify-content: space-between; gap
     </div>
     <p class="say rv" style="color:var(--hot)">Beobachtungen entscheiden das bisher nicht.</p>
   </div>
-  <footer><p class="src">Quelle: [8] [9] [10] [11]</p><div class="pager"><a href="#f4">Zurück</a><span>5 / 10</span><a href="#f6">Weiter</a></div></footer>
+  <footer><p class="src">Quelle: [5] [6] [7] [8]</p><div class="pager"><a href="#f3">Zurück</a><span>4 / 11</span><a href="#f5">Weiter</a></div></footer>
 </section>
 
-<section id="f6" class="both">
+<section id="f5" class="both">
   <h2 class="rv">Die Dunkle Energie entscheidet</h2>
   <div class="body">
     <div class="split">
@@ -380,30 +383,13 @@ footer { display: flex; align-items: center; justify-content: space-between; gap
       </ul>
     </div>
   </div>
-  <footer><p class="src">Quelle: [1] Planck; [12] Riess et al.; [13] Perlmutter et al.; [14] DESI; [15] Son et al.; [16] Wiseman et al.</p><div class="pager"><a href="#f5">Zurück</a><span>6 / 10</span><a href="#f7">Weiter</a></div></footer>
+  <footer><p class="src">Quelle: [1] Planck; [9] Riess et al.; [10] Perlmutter et al.; [11] DESI; [12] Son et al.; [13] Wiseman et al.</p><div class="pager"><a href="#f4">Zurück</a><span>5 / 11</span><a href="#f6">Weiter</a></div></footer>
 </section>
 
-<section id="f7" class="cold">
-  <div class="dusk" aria-hidden="true"></div>
-  <h2 class="rv">Ende 1: Der Wärmetod</h2>
-  <p class="muted rv" style="font-size:1.15rem">Das Standardbild, wenn die Dunkle Energie konstant bleibt.</p>
-  <div class="body">
-    <ol class="ages">
-      <li class="rv"><i class="dot" style="--c:#7BD3DC;--d:1.1rem;--i:0" aria-hidden="true"></i><strong>10¹⁴ Jahre</strong><p>Es entstehen keine neuen Sterne mehr</p></li>
-      <li class="rv"><i class="dot" style="--c:#6BB7C0;--d:.95rem;--i:1" aria-hidden="true"></i><strong>10³⁷ Jahre</strong><p>Protonen könnten zerfallen (hypothetisch, Spanne 10³² bis 10⁴⁹)</p></li>
-      <li class="rv"><i class="dot" style="--c:#5C9BA4;--d:.8rem;--i:2" aria-hidden="true"></i><strong>10⁶⁵ Jahre</strong><p>Schwarze Löcher von Sternmasse sind verdampft</p></li>
-      <li class="rv"><i class="dot" style="--c:#4C7F88;--d:.65rem;--i:3" aria-hidden="true"></i><strong>10⁹⁸ Jahre</strong><p>Schwarze Löcher von Galaxienmasse sind verdampft</p></li>
-      <li class="rv"><i class="dot" style="--c:#3C626C;--d:.5rem;--i:4" aria-hidden="true"></i><strong>Ab 10¹⁰⁰ Jahren</strong><p>Die dunkle Ära</p></li>
-    </ol>
-    <p class="say rv" style="color:var(--cold)">Die Zeit läuft weiter, aber es passiert fast nichts mehr.</p>
-  </div>
-  <footer><p class="src">Quelle: [17] Adams &amp; Laughlin</p><div class="pager"><a href="#f6">Zurück</a><span>7 / 10</span><a href="#f8">Weiter</a></div></footer>
-</section>
-
-<section id="f8" class="cold">
+<section id="f6" class="cold">
   <div class="rings rip" aria-hidden="true"><i></i><i></i><i></i></div>
   <div class="rings crunch" aria-hidden="true"><i></i><i></i><i></i></div>
-  <h2 class="rv">Ende 2 und 3: Zwei schnellere Enden</h2>
+  <h2 class="rv">Zwei schnelle Enden</h2>
   <div class="body">
     <div class="grid2 ends">
       <article class="card rv l" style="--c:var(--hot)">
@@ -421,10 +407,59 @@ footer { display: flex; align-items: center; justify-content: space-between; gap
     </div>
     <p class="say rv" style="color:var(--mid)">Beides sind Modellrechnungen, keine Vorhersagen.</p>
   </div>
-  <footer><p class="src">Quelle: [18] Caldwell et al.; [19] Luu, Qiu, Tye; [20] Cornell Chronicle</p><div class="pager"><a href="#f7">Zurück</a><span>8 / 10</span><a href="#f9">Weiter</a></div></footer>
+  <footer><p class="src">Quelle: [14] Caldwell et al.; [15] Luu, Qiu, Tye; [16] Cornell Chronicle</p><div class="pager"><a href="#f5">Zurück</a><span>6 / 11</span><a href="#f7">Weiter</a></div></footer>
 </section>
 
-<section id="f9" class="both">
+<section id="f7" class="both">
+  <h2 class="rv">Das Gas geht aus</h2>
+  <div class="body">
+    <div class="grid3">
+      <article class="card rv z"><div class="ico atom" aria-hidden="true"><i></i><i></i></div><h3 style="margin:.8rem 0 .5rem">Große Sterne geben zurück.</h3><p>Wenn sie explodieren, bekommt die nächste Generation Gas und neue Elemente.</p></article>
+      <article class="card rv z"><div class="ico wall" aria-hidden="true"><i></i></div><h3 style="margin:.8rem 0 .5rem">Rote Zwerge behalten.</h3><p>Sie leben Billionen Jahre und werden zu Weißen Zwergen. Ihr Gas kommt nie zurück.</p></article>
+      <article class="card rv z"><div class="ico echo" aria-hidden="true"><i></i><i></i><i></i></div><h3 style="margin:.8rem 0 .5rem">Es wird nicht mehr viel.</h3><p>Eine Hochrechnung erwartet nur noch rund 5 % mehr Sternmasse als heute. Nach 1 bis 10 Billionen Jahren ist das Gas aufgebraucht.</p></article>
+    </div>
+  </div>
+  <footer><p class="src">Quelle: [17] Kurzgesagt; [18] Adams &amp; Laughlin; [19] Sobral et al.</p><div class="pager"><a href="#f6">Zurück</a><span>7 / 11</span><a href="#f8">Weiter</a></div></footer>
+</section>
+
+<section id="f8" class="cold">
+  <div class="dusk" aria-hidden="true"></div>
+  <h2 class="rv">Der lange Abschied</h2>
+  <p class="muted rv" style="font-size:1.15rem">Bleibt die Dunkle Energie konstant, gehen die Lichter nacheinander aus.</p>
+  <div class="body">
+    <ol class="ages">
+      <li class="rv"><i class="dot" style="--c:#7BD3DC;--d:1.1rem;--i:0" aria-hidden="true"></i><strong>Ab 10¹³ Jahren</strong><p>Weiße Zwerge kühlen zu unsichtbaren Schwarzen Zwergen aus</p></li>
+      <li class="rv"><i class="dot" style="--c:#6BB7C0;--d:.95rem;--i:1" aria-hidden="true"></i><strong>10¹⁴ Jahre</strong><p>Es entstehen keine neuen Sterne mehr</p></li>
+      <li class="rv"><i class="dot" style="--c:#5C9BA4;--d:.8rem;--i:2" aria-hidden="true"></i><strong>Um 10¹⁹ Jahre</strong><p>Galaxien lösen sich auf, jedes Objekt treibt allein durchs Dunkel</p></li>
+      <li class="rv"><i class="dot" style="--c:#4C7F88;--d:.65rem;--i:3" aria-hidden="true"></i><strong>Um 10¹⁰⁰ Jahre</strong><p>Das letzte große Schwarze Loch verdampft in einem Lichtblitz</p></li>
+      <li class="rv"><i class="dot" style="--c:#3C626C;--d:.5rem;--i:4" aria-hidden="true"></i><strong>Danach</strong><p>Übrig bleiben Schwarze Zwerge, sichtbar ändert sich nichts mehr</p></li>
+    </ol>
+    <p class="say rv" style="color:var(--cold)">Die Zeit läuft weiter, aber es passiert fast nichts mehr.</p>
+  </div>
+  <footer><p class="src">Quelle: [17] Kurzgesagt; [18] Adams &amp; Laughlin</p><div class="pager"><a href="#f7">Zurück</a><span>8 / 11</span><a href="#f9">Weiter</a></div></footer>
+</section>
+
+<section id="f9" class="cold">
+  <div class="flash" aria-hidden="true"></div>
+  <h2 class="rv">Das Allerletzte: eine Supernova</h2>
+  <div class="body">
+    <div class="split">
+      <div class="energy rv l">
+        <div class="dwarf" aria-hidden="true"><i class="blast"></i><i class="husk"></i><i class="spark" style="left:38%;top:42%;animation-delay:2s"></i><i class="spark" style="left:60%;top:55%;animation-delay:6s"></i><i class="spark" style="left:50%;top:34%;animation-delay:9s"></i></div>
+        <div><p class="stat" style="color:var(--star);font-family:var(--body)">10¹¹⁰⁰ Jahre</p><p class="stat-label">bis der erste Schwarze Zwerg explodiert, der letzte nach bis zu 10³²⁰⁰⁰ Jahren</p></div>
+      </div>
+      <ul class="points tight">
+        <li class="rv"><i class="dot" style="--c:var(--cold);--d:.7rem;--i:0" aria-hidden="true"></i><span>So groß wie die Erde, so schwer wie ein Stern: Nur der Druck der Elektronen verhindert den Kollaps.</span></li>
+        <li class="rv"><i class="dot" style="--c:var(--cold);--d:.7rem;--i:1" aria-hidden="true"></i><span>Durch den Tunneleffekt verschmelzen extrem selten Atomkerne, am Ende zu Nickel-56. Es zerfällt zu Eisen, dabei gehen Elektronen verloren.</span></li>
+        <li class="rv"><i class="dot" style="--c:var(--hot);--d:.7rem;--i:2" aria-hidden="true"></i><span>Dann gibt der Druck nach. Der Stern kollabiert und leuchtet kurz so hell wie eine Galaxie. Danach bleibt es dunkel.</span></li>
+        <li class="rv"><i class="dot" style="--c:var(--mid);--d:.7rem;--i:3" aria-hidden="true"></i><span>Das betrifft nur rund 1 % aller Sterne und gilt nur, wenn Protonen nicht zerfallen. Falcke et al. sehen Sternreste schon nach rund 10⁷⁸ Jahren verschwinden, dann käme es nie dazu.</span></li>
+      </ul>
+    </div>
+  </div>
+  <footer><p class="src">Quelle: [17] Kurzgesagt; [20] Caplan; [21] Falcke et al.; [22] Radboud University</p><div class="pager"><a href="#f8">Zurück</a><span>9 / 11</span><a href="#f10">Weiter</a></div></footer>
+</section>
+
+<section id="f10" class="both">
   <h2 class="rv">Die Antwort</h2>
   <div class="body">
     <div class="grid3 verdict">
@@ -432,12 +467,12 @@ footer { display: flex; align-items: center; justify-content: space-between; gap
       <div class="rv z" style="--c:var(--mid)"><i class="dot" style="--i:1" aria-hidden="true"></i><h3>Wahrscheinlich:</h3><p>Sterne und Galaxien haben ein Ablaufdatum, egal welches Szenario stimmt.</p></div>
       <div class="rv z" style="--c:var(--cold)"><i class="dot" style="--i:2" aria-hidden="true"></i><h3>Offen:</h3><p>Ob Raum und Zeit selbst einen Anfang oder ein Ende haben.</p></div>
     </div>
-    <p class="final"><span class="w" style="--w:0">Der</span> <span class="w" style="--w:1">Anfang</span> <span class="w" style="--w:2">unseres</span> <span class="w" style="--w:3">heißen</span> <span class="w" style="--w:4">Kosmos</span> <span class="w" style="--w:5">ist</span> <span class="w" style="--w:6">belegt.</span> <span class="w" style="--w:7">Der</span> <span class="w" style="--w:8">Anfang</span> <span class="w" style="--w:9">von</span> <span class="w" style="--w:10">allem</span> <span class="w" style="--w:11">ist</span> <span class="w" style="--w:12">es</span> <span class="w" style="--w:13">nicht.</span></p>
+    <p class="final"><span class="w" style="--w:0">Den</span> <span class="w" style="--w:1">Anfang</span> <span class="w" style="--w:2">von</span> <span class="w" style="--w:3">allem</span> <span class="w" style="--w:4">kennen</span> <span class="w" style="--w:5">wir</span> <span class="w" style="--w:6">nicht.</span> <span class="w" style="--w:7">Am</span> <span class="w" style="--w:8">Ende</span> <span class="w" style="--w:9">wartet</span> <span class="w" style="--w:10">vielleicht</span> <span class="w" style="--w:11">noch</span> <span class="w" style="--w:12">ein</span> <span class="w" style="--w:13">letzter</span> <span class="w" style="--w:14">Lichtblitz.</span></p>
   </div>
-  <footer><div class="pager"><a href="#f8">Zurück</a><span>9 / 10</span><a href="#f10">Weiter</a></div></footer>
+  <footer><div class="pager"><a href="#f9">Zurück</a><span>10 / 11</span><a href="#f11">Weiter</a></div></footer>
 </section>
 
-<section id="f10">
+<section id="f11">
   <h2 class="rv">Quellen</h2>
   <div class="body">
     <div class="refs rv">
@@ -445,25 +480,27 @@ footer { display: flex; align-items: center; justify-content: space-between; gap
       <p>2. NASA Science. Universe Overview. <a href="https://science.nasa.gov/universe/overview/">https://science.nasa.gov/universe/overview/</a></p>
       <p>3. Guth, A. H. (1981). Inflationary universe. Phys. Rev. D 23, 347. <a href="https://doi.org/10.1103/PhysRevD.23.347">https://doi.org/10.1103/PhysRevD.23.347</a></p>
       <p>4. Naidu, R. P. et al. A Cosmic Miracle. Open Journal of Astrophysics. <a href="https://arxiv.org/abs/2505.11263">https://arxiv.org/abs/2505.11263</a></p>
-      <p>5. Hubble, E. (1929). PNAS 15(3), 168-173. <a href="https://doi.org/10.1073/pnas.15.3.168">https://doi.org/10.1073/pnas.15.3.168</a></p>
-      <p>6. Particle Data Group (2026). Big Bang Nucleosynthesis. <a href="https://pdgweb.lbl.gov/2026/reviews/rpp2026-rev-bbang-nucleosynthesis.pdf">https://pdgweb.lbl.gov/2026/reviews/rpp2026-rev-bbang-nucleosynthesis.pdf</a></p>
-      <p>7. Penzias, A. A.; Wilson, R. W. (1965). ApJ 142, 419-421. <a href="https://doi.org/10.1086/148307">https://doi.org/10.1086/148307</a></p>
-      <p>8. Borde, A.; Guth, A. H.; Vilenkin, A. (2003). Phys. Rev. Lett. 90, 151301. <a href="https://doi.org/10.1103/PhysRevLett.90.151301">https://doi.org/10.1103/PhysRevLett.90.151301</a></p>
-      <p>9. Hartle, J. B.; Hawking, S. W. (1983). Wave function of the Universe. Phys. Rev. D 28, 2960. <a href="https://doi.org/10.1103/PhysRevD.28.2960">https://doi.org/10.1103/PhysRevD.28.2960</a></p>
-      <p>10. Steinhardt, P. J.; Turok, N. (2002). A Cyclic Model of the Universe. Science. <a href="https://doi.org/10.1126/science.1070462">https://doi.org/10.1126/science.1070462</a></p>
-      <p>11. Easson, D. A.; Lesnefsky, J. E. (2024). Inflationary resolution of the initial singularity. <a href="https://arxiv.org/abs/2402.13031">https://arxiv.org/abs/2402.13031</a></p>
-      <p>12. Riess, A. G. et al. (1998). AJ 116, 1009. <a href="https://doi.org/10.1086/300499">https://doi.org/10.1086/300499</a></p>
-      <p>13. Perlmutter, S. et al. (1999). ApJ 517, 565. <a href="https://doi.org/10.1086/307221">https://doi.org/10.1086/307221</a></p>
-      <p>14. DESI Collaboration (2025). DESI DR2 Results II. Phys. Rev. D 112, 083515. <a href="https://arxiv.org/abs/2503.14738">https://arxiv.org/abs/2503.14738</a></p>
-      <p>15. Son, J. et al. (2025). Strong progenitor age bias in supernova cosmology II. MNRAS 544(1), 975-987. <a href="https://doi.org/10.1093/mnras/staf1685">https://doi.org/10.1093/mnras/staf1685</a></p>
-      <p>16. Wiseman, P. et al. Still Accelerating. Angenommen bei MNRAS. <a href="https://arxiv.org/abs/2601.13785">https://arxiv.org/abs/2601.13785</a></p>
-      <p>17. Adams, F. C.; Laughlin, G. (1997). A Dying Universe. Rev. Mod. Phys. 69, 337. <a href="https://doi.org/10.1103/RevModPhys.69.337">https://doi.org/10.1103/RevModPhys.69.337</a></p>
-      <p>18. Caldwell, R. R.; Kamionkowski, M.; Weinberg, N. N. (2003). Phantom Energy and Cosmic Doomsday. Phys. Rev. Lett. 91, 071301. <a href="https://doi.org/10.1103/PhysRevLett.91.071301">https://doi.org/10.1103/PhysRevLett.91.071301</a></p>
-      <p>19. Luu, H. N.; Qiu, Y.-C.; Tye, S.-H. H. (2025). The lifespan of our universe. JCAP 2025(09), 055. <a href="https://doi.org/10.1088/1475-7516/2025/09/055">https://doi.org/10.1088/1475-7516/2025/09/055</a></p>
-      <p>20. Cornell Chronicle (1. Oktober 2025). <a href="https://news.cornell.edu/node/331616">https://news.cornell.edu/node/331616</a></p>
+      <p>5. Borde, A.; Guth, A. H.; Vilenkin, A. (2003). Phys. Rev. Lett. 90, 151301. <a href="https://doi.org/10.1103/PhysRevLett.90.151301">https://doi.org/10.1103/PhysRevLett.90.151301</a></p>
+      <p>6. Hartle, J. B.; Hawking, S. W. (1983). Wave function of the Universe. Phys. Rev. D 28, 2960. <a href="https://doi.org/10.1103/PhysRevD.28.2960">https://doi.org/10.1103/PhysRevD.28.2960</a></p>
+      <p>7. Steinhardt, P. J.; Turok, N. (2002). A Cyclic Model of the Universe. Science. <a href="https://doi.org/10.1126/science.1070462">https://doi.org/10.1126/science.1070462</a></p>
+      <p>8. Easson, D. A.; Lesnefsky, J. E. (2024). Inflationary resolution of the initial singularity. <a href="https://arxiv.org/abs/2402.13031">https://arxiv.org/abs/2402.13031</a></p>
+      <p>9. Riess, A. G. et al. (1998). AJ 116, 1009. <a href="https://doi.org/10.1086/300499">https://doi.org/10.1086/300499</a></p>
+      <p>10. Perlmutter, S. et al. (1999). ApJ 517, 565. <a href="https://doi.org/10.1086/307221">https://doi.org/10.1086/307221</a></p>
+      <p>11. DESI Collaboration (2025). DESI DR2 Results II. Phys. Rev. D 112, 083515. <a href="https://arxiv.org/abs/2503.14738">https://arxiv.org/abs/2503.14738</a></p>
+      <p>12. Son, J. et al. (2025). Strong progenitor age bias in supernova cosmology II. MNRAS 544(1), 975-987. <a href="https://doi.org/10.1093/mnras/staf1685">https://doi.org/10.1093/mnras/staf1685</a></p>
+      <p>13. Wiseman, P. et al. Still Accelerating. Angenommen bei MNRAS. <a href="https://arxiv.org/abs/2601.13785">https://arxiv.org/abs/2601.13785</a></p>
+      <p>14. Caldwell, R. R.; Kamionkowski, M.; Weinberg, N. N. (2003). Phantom Energy and Cosmic Doomsday. Phys. Rev. Lett. 91, 071301. <a href="https://doi.org/10.1103/PhysRevLett.91.071301">https://doi.org/10.1103/PhysRevLett.91.071301</a></p>
+      <p>15. Luu, H. N.; Qiu, Y.-C.; Tye, S.-H. H. (2025). The lifespan of our universe. JCAP 2025(09), 055. <a href="https://doi.org/10.1088/1475-7516/2025/09/055">https://doi.org/10.1088/1475-7516/2025/09/055</a></p>
+      <p>16. Cornell Chronicle (1. Oktober 2025). <a href="https://news.cornell.edu/node/331616">https://news.cornell.edu/node/331616</a></p>
+      <p>17. Kurzgesagt – In a Nutshell. The Last Thing To Ever Happen In The Universe (Video). <a href="https://www.youtube.com/watch?v=FgnjdW-x7mQ">https://www.youtube.com/watch?v=FgnjdW-x7mQ</a></p>
+      <p>18. Adams, F. C.; Laughlin, G. (1997). A Dying Universe. Rev. Mod. Phys. 69, 337. <a href="https://doi.org/10.1103/RevModPhys.69.337">https://doi.org/10.1103/RevModPhys.69.337</a></p>
+      <p>19. Sobral, D. et al. (2013). A large Hα survey at z = 2.23, 1.47, 0.84 and 0.40. MNRAS 428, 1128. <a href="https://doi.org/10.1093/mnras/sts096">https://doi.org/10.1093/mnras/sts096</a></p>
+      <p>20. Caplan, M. E. (2020). Black Dwarf Supernova in the Far Future. MNRAS. <a href="https://doi.org/10.1093/mnras/staa2262">https://doi.org/10.1093/mnras/staa2262</a></p>
+      <p>21. Falcke, H.; Wondrak, M. F.; van Suijlekom, W. D. (2025). An upper limit to the lifetime of stellar remnants from gravitational pair production. JCAP 05, 023. <a href="https://arxiv.org/abs/2410.14734">https://arxiv.org/abs/2410.14734</a></p>
+      <p>22. Radboud University (2025). Universe decays faster than thought. <a href="https://www.ru.nl/en/research/research-news/universe-decays-faster-than-thought-but-still-takes-a-long-time">https://www.ru.nl/en/research/research-news/universe-decays-faster-than-thought-but-still-takes-a-long-time</a></p>
     </div>
   </div>
-  <footer><p class="src">Sternenhimmel und Effekte: mit CSS erzeugt, rein dekorativ, keine astronomischen Aufnahmen.</p><div class="pager"><a href="#f9">Zurück</a><span>10 / 10</span></div></footer>
+  <footer><p class="src">Sternenhimmel und Effekte: mit CSS erzeugt, rein dekorativ, keine astronomischen Aufnahmen.</p><div class="pager"><a href="#f10">Zurück</a><span>11 / 11</span></div></footer>
 </section>
 </main>
 
