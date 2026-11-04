@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hatte das Universum einen Anfang?</title>
+<meta name="description" content="Präsentation über Anfang und Ende des Universums: was die Kosmologie belegen kann und was offen bleibt.">
+<link rel="icon" href="data:,">
+<style>
+/* Alles steckt in dieser einen Datei, damit sie ohne Internet und ohne Zusatzdateien läuft.
+   Die iPad-Vorschau in der Dateien-App führt kein JavaScript aus. Darum funktionieren
+   Blättern und die Daueranimationen hier nur mit CSS, das Skript unten ist reiner Komfort. */
+:root {
+  --night: #0B0A14; --panel: rgba(27, 25, 48, .86); --star: #F4F1E8; --muted: #B4B1C4;
+  --hot: #F2A93B; --mid: #C9B8E0; --cold: #7BD3DC;
+  --head: Georgia, "Times New Roman", serif;
+  --body: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  --gut: max(clamp(1.25rem, 5vw, 4.5rem), calc((100vw - 82rem) / 2));
+  color-scheme: dark;
+}
+* { box-sizing: border-box; margin: 0; }
+/* claude.ai setzt body auf 14px. font: inherit holt die mitwachsende Schrift von html zurueck */
+body { font: inherit; background: var(--night); color: var(--star); }
+html {
+  background: var(--night); color: var(--star);
+  /* Schrift wächst mit dem Bildschirm, wird auf flachen Fenstern aber nicht zu groß */
+  font: clamp(1rem, min(.55rem + 1vw, 2.7vh), 1.45rem)/1.4 var(--body);
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth; scroll-snap-type: y proximity;
+}
+/* Auf großen Bildschirmen rastet jede Folie sicher ein. Auf kleinen bleibt es weich, damit lange Folien lesbar bleiben */
+@media (min-width: 900px) and (min-height: 600px) { html { scroll-snap-type: y mandatory; } }
+
+/* ---------- Sternenhimmel: drei Ebenen funkeln versetzt ---------- */
+.stars { position: fixed; inset: 0; z-index: -1; overflow: hidden; }
+/* Die Ebenen sind höher als der Bildschirm, weil sie beim Scrollen verschieden schnell nach oben wandern. Das ergibt Tiefe */
+.stars i { position: absolute; inset: 0 0 auto; height: calc(100% + 1200px); translate: 0 calc(var(--sy, 0) * var(--k) * -1px); animation: twinkle var(--t) ease-in-out infinite alternate; }
+.stars i:nth-child(1) { --t: 4s; --k: .015; background-size: 233px 233px; background-image:
+  radial-gradient(1.2px 1.2px at 17px 41px, #fff 50%, transparent 51%), radial-gradient(1px 1px at 88px 129px, #cfd8ff 50%, transparent 51%),
+  radial-gradient(1px 1px at 140px 22px, #fff 50%, transparent 51%), radial-gradient(1.4px 1.4px at 201px 180px, #ffe9c9 50%, transparent 51%); }
+.stars i:nth-child(2) { --t: 7s; --k: .04; animation-delay: -3s; background-size: 373px 373px; background-image:
+  radial-gradient(1.5px 1.5px at 61px 301px, #fff 50%, transparent 51%), radial-gradient(1px 1px at 190px 77px, #dfe7ff 50%, transparent 51%),
+  radial-gradient(1.2px 1.2px at 322px 214px, #fff 50%, transparent 51%), radial-gradient(1px 1px at 251px 351px, #cfd8ff 50%, transparent 51%); }
+.stars i:nth-child(3) { --t: 11s; --k: .08; animation-delay: -6s; background-size: 541px 541px; background-image:
+  radial-gradient(2px 2px at 103px 188px, #fff 50%, transparent 51%), radial-gradient(1.6px 1.6px at 409px 62px, #ffe9c9 50%, transparent 51%),
+  radial-gradient(1.6px 1.6px at 277px 463px, #e8f6ff 50%, transparent 51%); }
+@keyframes twinkle { from { opacity: .35; } to { opacity: 1; } }
+/* Sternschnuppen fliegen auf jeder Folie ab und zu durchs Bild */
+.meteors { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.meteors i { position: absolute; left: -12rem; width: 9rem; height: 2px; border-radius: 2px; background: linear-gradient(90deg, transparent, #fff); opacity: 0; rotate: 16deg; animation: meteor 13s linear infinite; }
+.meteors i:nth-child(1) { top: 10%; }
+.meteors i:nth-child(2) { top: 46%; animation-duration: 17s; animation-delay: -5s; }
+.meteors i:nth-child(3) { top: 72%; animation-duration: 23s; animation-delay: -10s; }
+@keyframes meteor { 0%, 86% { opacity: 0; translate: 0 0; } 88% { opacity: .9; } 96%, 100% { opacity: 0; translate: 125vw 36vw; } }
+
+/* ---------- Folienrahmen ---------- */
+section {
+  position: relative; isolation: isolate; overflow: hidden;
+  min-height: 100vh; min-height: 100svh;
+  display: flex; flex-direction: column; gap: 1.1rem;
+  padding: max(2.2rem, env(safe-area-inset-top)) max(var(--gut), env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(var(--gut), env(safe-area-inset-left));
+  scroll-snap-align: start;
+}
+/* Farbidee: Der Kosmos kühlt ab. Bernstein ist der heiße Anfang, Eisblau das kalte Ende */
+section::before { content: ""; position: absolute; inset: 0; z-index: -1; animation: breathe 9s ease-in-out infinite alternate; }
+.hot::before { background: radial-gradient(60% 70% at 0% 100%, rgba(242, 169, 59, .3), transparent 70%); }
+.cold::before { background: radial-gradient(60% 70% at 100% 0%, rgba(123, 211, 220, .3), transparent 70%); }
+.both::before { background: radial-gradient(55% 65% at 0% 100%, rgba(242, 169, 59, .28), transparent 70%), radial-gradient(55% 65% at 100% 0%, rgba(123, 211, 220, .28), transparent 70%); }
+@keyframes breathe { from { opacity: .6; } to { opacity: 1; } }
+
+h1, h2, h3, .say, .final { font-family: var(--head); }
+h1 { font-size: clamp(2.3rem, 7vw, 3.6rem); line-height: 1.12; }
+h2 { font-size: clamp(1.7rem, 4.6vw, 2.5rem); line-height: 1.15; }
+h3 { font-size: 1.4rem; line-height: 1.2; }
+.body { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 1.5rem; }
+.say { font-size: 1.4rem; font-style: italic; }
+.muted { color: var(--muted); }
+footer { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.src { font-size: max(.72rem, 12px); color: var(--muted); }
+.pager { display: flex; align-items: center; gap: .5rem; margin-left: auto; font-size: max(.78rem, 13px); color: var(--muted); }
+/* 44 Pixel sind die übliche Mindestgröße für Fingertipps */
+.pager a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 .85rem; border-radius: .6rem; color: var(--star); background: rgba(255, 255, 255, .09); text-decoration: none; }
+
+.dot { flex: none; display: inline-block; width: var(--d, 1.1rem); height: var(--d, 1.1rem); border-radius: 50%; color: var(--c); background: currentColor; animation: pulse 3.2s ease-in-out infinite; animation-delay: calc(var(--i, 0) * .4s); }
+@keyframes pulse { 0%, 100% { box-shadow: 0 0 .2rem 0 currentColor; } 50% { box-shadow: 0 0 1rem .22rem currentColor; } }
+.card { position: relative; background: var(--panel); border-radius: 1.1rem; padding: 1.5rem; }
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+.grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; }
+
+/* ---------- Folie 1: Urknall, Ringe laufen vom heißen Punkt nach außen und kühlen dabei ab ---------- */
+.burst { position: absolute; left: 12%; bottom: 20%; z-index: -1; width: 0; height: 0; }
+.burst::before { content: ""; position: absolute; width: 9rem; height: 9rem; margin: -4.5rem; border-radius: 50%; background: radial-gradient(circle, rgba(255, 214, 140, .9), rgba(242, 169, 59, .25) 40%, transparent 70%); animation: core 4.5s ease-in-out infinite alternate; }
+.burst i { position: absolute; width: 130vmax; height: 130vmax; margin: -65vmax; border-radius: 50%; border: 2px solid var(--hot); opacity: 0; animation: bang 12s cubic-bezier(.15, .6, .4, 1) infinite; }
+.burst i:nth-child(2) { animation-delay: -4s; }
+.burst i:nth-child(3) { animation-delay: -8s; }
+@keyframes core { from { transform: scale(.75); opacity: .55; } to { transform: scale(1.1); opacity: 1; } }
+@keyframes bang { 0% { transform: scale(0); opacity: .75; border-color: var(--hot); } 55% { border-color: var(--cold); opacity: .3; } 100% { transform: scale(1); opacity: 0; border-color: var(--cold); } }
+.temp { position: relative; height: 2px; background: linear-gradient(90deg, var(--hot), var(--cold)); margin-top: 1.5rem; }
+.temp::after { content: ""; position: absolute; top: -.45rem; width: .9rem; height: .9rem; margin-left: -.45rem; border-radius: 50%; animation: comet 9s ease-in-out infinite; }
+@keyframes comet { 0% { left: 0; background: var(--hot); box-shadow: 0 0 1.2rem var(--hot); transform: scale(1.4); } 100% { left: 100%; background: var(--cold); box-shadow: 0 0 .4rem var(--cold); transform: scale(.6); } }
+.sub { font-size: 1.35rem; color: var(--muted); }
+
+/* ---------- Folie 2 ---------- */
+.split { display: grid; grid-template-columns: 5fr 6fr; gap: 3rem; align-items: center; }
+.big { font: 700 6.6rem/1 var(--head); color: var(--hot); animation: glow 4s ease-in-out infinite alternate; }
+@keyframes glow { from { text-shadow: 0 0 .1em rgba(242, 169, 59, .15); } to { text-shadow: 0 0 .45em rgba(242, 169, 59, .6); } }
+.unit { font-size: 1.7rem; margin-top: .4rem; }
+.lead p { font-size: 1.25rem; }
+.lead p + p { margin-top: 1rem; }
+
+/* ---------- Folie 3: Zeitstrahl, ein Lichtpunkt läuft von links nach rechts ---------- */
+.line { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.3rem; list-style: none; padding: 0; }
+.line::before { content: ""; position: absolute; left: 0; right: 0; top: 5.15rem; height: 2px; background: linear-gradient(90deg, var(--hot), var(--mid)); transform-origin: left; transition: transform 1.8s cubic-bezier(.4, 0, .2, 1) .15s; }
+.line::after { content: ""; position: absolute; top: calc(5.15rem - .2rem); left: 0; width: .45rem; height: .45rem; border-radius: 50%; background: #fff; box-shadow: 0 0 .8rem .2rem #fff; animation: travel 7s linear infinite; }
+@keyframes travel { from { left: 0; opacity: 1; } 92% { opacity: 1; } to { left: 100%; opacity: 0; } }
+.line li { position: relative; z-index: 1; display: grid; grid-template-rows: 4rem 2.3rem auto; color: var(--c); }
+.line li::before { content: ""; grid-row: 2; align-self: center; width: var(--d); height: var(--d); border-radius: 50%; background: currentColor; animation: pulse 3.2s ease-in-out infinite; animation-delay: calc(var(--i) * .5s); transition: transform .7s cubic-bezier(.3, 1.6, .5, 1) calc(.4s + var(--i) * .35s); }
+.line strong { grid-row: 1; align-self: end; font-size: 1.2rem; line-height: 1.15; padding-bottom: .15rem; }
+.line p { grid-row: 3; color: var(--star); padding-top: .7rem; }
+
+/* ---------- Folie 5 ---------- */
+.rows { display: grid; gap: 1.4rem; }
+.row { display: grid; grid-template-columns: 3.2rem 10rem 1fr; gap: 1rem; align-items: start; }
+.row h3 { color: var(--c); }
+.who { font-size: .85rem; color: var(--muted); margin-top: .15rem; }
+
+/* ---------- Folie 6: Der Ring läuft beim Hineinblättern bis 68 % und glimmt danach weiter ---------- */
+.energy { display: flex; flex-direction: column; align-items: flex-start; gap: 1rem; }
+.stat { font: 700 3.7rem/1.05 var(--head); color: var(--cold); white-space: nowrap; }
+.stat-label { font-size: 1.25rem; margin-top: .35rem; }
+.ring { display: block; width: 10rem; height: 10rem; rotate: -90deg; overflow: visible; }
+.ring circle { fill: none; stroke-width: 9; }
+.ring .track { stroke: rgba(255, 255, 255, .1); }
+/* 264 ist der Kreisumfang (2 * Pi * 42). Ein Versatz von 84,5 lässt genau 68 % des Rings stehen */
+.ring .val { stroke: var(--cold); stroke-dasharray: 264; stroke-dashoffset: 84.5; transition: stroke-dashoffset 1.9s cubic-bezier(.2, .7, .2, 1) .25s; animation: ringglow 3.5s ease-in-out infinite alternate; }
+@keyframes ringglow { from { filter: drop-shadow(0 0 .1rem var(--cold)); } to { filter: drop-shadow(0 0 .7rem var(--cold)); } }
+.points { list-style: none; padding: 0; display: grid; gap: 1.1rem; }
+.points li { display: flex; gap: .85rem; align-items: flex-start; font-size: 1.1rem; }
+.points .dot { margin-top: .4rem; }
+
+/* ---------- Folie 7: Wärmetod, die Punkte verlöschen einer nach dem anderen ---------- */
+.ages { position: relative; list-style: none; padding: 0; display: grid; gap: .85rem; }
+.ages::before { content: ""; position: absolute; left: .54rem; top: .6rem; bottom: 1rem; width: 2px; background: linear-gradient(var(--cold), rgba(123, 211, 220, .08)); }
+.ages li { display: grid; grid-template-columns: 1.1rem 11rem 1fr; gap: 1rem; align-items: center; }
+.ages .dot { position: relative; justify-self: center; animation: dying 14s ease-in-out infinite; animation-delay: calc(var(--i) * 1.7s); }
+@keyframes dying { 0%, 8% { opacity: 1; box-shadow: 0 0 .7rem .1rem currentColor; } 28%, 86% { opacity: .15; box-shadow: none; } 100% { opacity: 1; box-shadow: 0 0 .7rem .1rem currentColor; } }
+.ages strong { font-size: 1.2rem; color: var(--cold); }
+
+/* ---------- Folie 8: Teilchen fliegen beim Big Rip auseinander und stürzen beim Big Crunch zusammen ---------- */
+.fx { position: absolute; top: 1.2rem; right: 1.2rem; width: 3.8rem; height: 3.8rem; }
+.fx i { position: absolute; left: 50%; top: 50%; width: .34rem; height: .34rem; margin: -.17rem; border-radius: 50%; background: var(--c); animation: rip 2.8s ease-in infinite; animation-delay: calc(var(--k) * -.35s); }
+.fx.crunch i { animation-name: crunch; }
+@keyframes rip { from { transform: rotate(var(--a)) translateX(.1rem); opacity: 1; } to { transform: rotate(var(--a)) translateX(1.9rem); opacity: 0; } }
+@keyframes crunch { from { transform: rotate(var(--a)) translateX(1.9rem); opacity: 0; } 65% { opacity: 1; } to { transform: rotate(var(--a)) translateX(.1rem); opacity: 1; } }
+.ends h3 { padding-right: 4.2rem; margin-bottom: .6rem; color: var(--c); }
+.ends ul { list-style: none; padding: 0; display: grid; gap: .45rem; }
+
+/* ---------- Folie 9: Der Schlusssatz kühlt langsam ab ---------- */
+.final { font-size: 1.9rem; font-style: italic; line-height: 1.25; animation: cool 14s ease-in-out infinite alternate; }
+.final .w { display: inline-block; transition: opacity .6s ease, transform .6s cubic-bezier(.2, .7, .2, 1), filter .6s ease; transition-delay: calc(.35s + var(--w) * 110ms); }
+@keyframes cool { 0% { color: var(--hot); } 50% { color: var(--star); } 100% { color: var(--cold); } }
+.verdict h3 { color: var(--c); font-size: 1.5rem; margin: .7rem 0 .4rem; }
+
+/* ---------- Folie 10 ---------- */
+.refs { columns: 2; column-gap: 2.5rem; font-size: max(.72rem, 12px); line-height: 1.32; }
+.refs p { break-inside: avoid; margin-bottom: .42rem; }
+.refs a { color: var(--cold); overflow-wrap: anywhere; }
+
+/* ---------- Folie 1: Der Titel wird scharf, er bleibt dabei immer lesbar ---------- */
+#f1 h1 { animation: focus 1.8s cubic-bezier(.2, .7, .2, 1) both; }
+#f1 .sub { animation: focus 1.8s cubic-bezier(.2, .7, .2, 1) .35s both; }
+@keyframes focus { from { filter: blur(9px); opacity: .45; } }
+
+/* ---------- Folie 2: Der Raum selbst dehnt sich und trägt die Punkte vom Mittelpunkt weg ---------- */
+.space { position: absolute; inset: 0; z-index: -1; overflow: hidden; -webkit-mask-image: radial-gradient(75% 85% at 24% 52%, #000 15%, transparent 78%); mask-image: radial-gradient(75% 85% at 24% 52%, #000 15%, transparent 78%); }
+.space i { position: absolute; left: 24%; top: 52%; width: 150vmax; height: 150vmax; margin: -75vmax; opacity: 0; background: radial-gradient(circle, rgba(255, 224, 170, .95) 1.4px, transparent 1.9px) 0 0 / 74px 74px; animation: stretch 14s linear infinite; }
+.space i:nth-child(2) { background-size: 53px 53px; animation-delay: -7s; }
+@keyframes stretch { 0% { transform: scale(.55); opacity: 0; } 18% { opacity: .75; } 80% { opacity: .55; } 100% { transform: scale(2.1); opacity: 0; } }
+
+/* ---------- Folie 4 und 5: Kleine Bilder, die die Aussage in Bewegung zeigen ---------- */
+.ico { position: relative; display: block; flex: none; width: 3.2rem; height: 2.6rem; color: var(--c, var(--hot)); }
+.ico i { position: absolute; }
+.card .ico { scale: 1.5; transform-origin: left center; margin: .5rem 0 .7rem; }
+@keyframes spin { to { rotate: 360deg; } }
+/* Hubble: Alles entfernt sich, und was weiter weg ist, ist schneller */
+.gal::before { content: ""; position: absolute; left: 50%; top: 50%; width: .5rem; height: .5rem; margin: -.25rem; border-radius: 50%; background: currentColor; }
+.gal i { left: 50%; top: 50%; width: .36rem; height: .36rem; margin: -.18rem; border-radius: 50%; background: currentColor; animation: away 3s ease-in infinite; animation-delay: var(--dl); }
+@keyframes away { from { translate: 0 0; opacity: 1; } to { translate: var(--x) 0; opacity: 0; } }
+/* Leichte Elemente: Elektronen kreisen um den Kern */
+.atom::before { content: ""; position: absolute; left: 50%; top: 50%; width: .55rem; height: .55rem; margin: -.275rem; border-radius: 50%; background: currentColor; box-shadow: 0 0 .6rem currentColor; }
+.atom i { inset: 0 .3rem; border: 1px solid rgba(255, 255, 255, .3); border-radius: 50%; animation: spin 2.6s linear infinite; }
+.atom i:nth-child(2) { inset: .45rem .75rem; animation-duration: 1.7s; animation-direction: reverse; }
+.atom i::after { content: ""; position: absolute; left: 50%; top: -.19rem; width: .34rem; height: .34rem; margin-left: -.17rem; border-radius: 50%; background: var(--star); }
+/* Nachglühen: Wellen breiten sich aus und kühlen dabei ab */
+.echo i { inset: 0 .3rem; border-radius: 50%; border: 2px solid currentColor; opacity: 0; animation: ripple 3.6s ease-out infinite; }
+.echo i:nth-child(2) { animation-delay: -1.2s; }
+.echo i:nth-child(3) { animation-delay: -2.4s; }
+@keyframes ripple { from { transform: scale(.15); opacity: .95; border-color: var(--hot); } to { transform: scale(1); opacity: 0; border-color: var(--cold); } }
+/* Eine Grenze: Der Punkt läuft auf eine Wand zu und kommt nicht weiter */
+.wall::after { content: ""; position: absolute; right: .25rem; top: 0; bottom: 0; width: 3px; border-radius: 2px; background: currentColor; animation: flash 2.6s ease-in infinite; }
+.wall i { left: 0; top: 50%; width: .5rem; height: .5rem; margin-top: -.25rem; border-radius: 50%; background: currentColor; animation: hit 2.6s ease-in infinite; }
+@keyframes hit { 0% { translate: 0 0; opacity: 0; } 12% { opacity: 1; } 84% { translate: 2.2rem 0; opacity: 1; } 100% { translate: 2.2rem 0; opacity: 0; } }
+@keyframes flash { 0%, 78%, 100% { box-shadow: 0 0 .15rem currentColor; } 86% { box-shadow: 0 0 1rem .2rem currentColor; } }
+/* Kein Rand: eine weiche Form ohne scharfe Kante */
+.blob i { inset: .1rem .4rem; background: radial-gradient(circle at 40% 38%, #fff, var(--c) 45%, transparent 72%); animation: morph 5s ease-in-out infinite alternate; }
+@keyframes morph { from { border-radius: 58% 42% 52% 48% / 50% 56% 44% 50%; scale: .9; } to { border-radius: 44% 56% 46% 54% / 56% 44% 58% 42%; scale: 1.1; } }
+/* Kein Anfang: Ein Punkt kreist ohne Ende */
+.loop i { inset: .1rem .4rem; border-radius: 50%; border: 2px dashed currentColor; animation: spin 9s linear infinite; }
+.loop i::after { content: ""; position: absolute; left: 50%; top: -.27rem; width: .46rem; height: .46rem; margin-left: -.23rem; border-radius: 50%; background: currentColor; box-shadow: 0 0 .5rem currentColor; }
+
+/* ---------- Folie 7: Der Sternenhimmel wird langsam dunkel ---------- */
+.dusk { position: absolute; inset: 0; z-index: -1; background: var(--night); opacity: 0; animation: dusk 14s ease-in-out infinite; }
+@keyframes dusk { 0%, 10%, 100% { opacity: 0; } 55%, 86% { opacity: .82; } }
+
+/* ---------- Folie 8: Links reißen die Ringe nach außen, rechts stürzen sie zusammen ---------- */
+.rings { position: absolute; z-index: -1; top: 52%; width: 0; height: 0; }
+.rings.rip { left: 26%; }
+.rings.crunch { left: 74%; }
+.rings i { position: absolute; width: 95vmin; height: 95vmin; margin: -47.5vmin; border-radius: 50%; border: 2px solid var(--hot); opacity: 0; }
+.rings.rip i { animation: bang 8s cubic-bezier(.15, .6, .4, 1) infinite; }
+.rings.crunch i { border-color: var(--cold); animation: implode 8s cubic-bezier(.6, 0, .85, .4) infinite; }
+.rings i:nth-child(2) { animation-delay: -2.67s; }
+.rings i:nth-child(3) { animation-delay: -5.33s; }
+@keyframes implode { 0% { transform: scale(1); opacity: 0; } 30% { opacity: .5; } 92% { opacity: .9; } 100% { transform: scale(0); opacity: 0; } }
+
+/* ---------- Navigation am Rand, nur auf großen Bildschirmen ---------- */
+.nav { position: fixed; right: .3rem; top: 50%; transform: translateY(-50%); display: grid; z-index: 2; }
+.nav a { display: grid; place-items: center; width: 2.2rem; height: 2rem; }
+.nav a::before { content: ""; width: .5rem; height: .5rem; border-radius: 50%; background: rgba(255, 255, 255, .35); transition: transform .3s, background .3s; }
+.nav a[aria-current]::before { background: var(--star); transform: scale(1.5); }
+
+/* ---------- Hereinkommen beim Blättern. Versteckt wird nur, wenn das Skript wirklich läuft ---------- */
+.js section .rv { opacity: 0; transform: translateY(1.3rem); }
+.js section .rv.l { transform: translateX(-2.4rem); }
+.js section .rv.r { transform: translateX(2.4rem); }
+.js section .rv.z { transform: scale(.9); }
+.js section.in .rv { opacity: 1; transform: none; transition: opacity .75s ease, transform .75s cubic-bezier(.2, .7, .2, 1); transition-delay: calc(var(--n, 0) * 110ms); }
+/* Was beim Hineinblättern entsteht: Die Linie zieht sich, Punkte springen auf, der Ring läuft voll, Wörter erscheinen */
+.js section:not(.in) .line::before { transform: scaleX(0); }
+.js section:not(.in) .line li::before { transform: scale(0); }
+.js section:not(.in) .ring .val { stroke-dashoffset: 264; }
+.js section:not(.in) .w { opacity: 0; transform: translateY(.45em); filter: blur(7px); }
+/* Folien außerhalb des Bildschirms pausieren und schonen den iPad-Akku */
+.js section:not(.in) *, .js section:not(.in)::before { animation-play-state: paused; }
+/* Ohne Skript übernimmt das Scrollen selbst die Einblendung, wo der Browser es kann */
+@supports (animation-timeline: view()) {
+  html:not(.js) .rv { animation: rise linear both; animation-timeline: view(); animation-range: entry 0% entry 60%; }
+  @keyframes rise { from { opacity: 0; transform: translateY(1.3rem); } }
+}
+
+/* ---------- Hochformat und kleine Bildschirme: alles untereinander ---------- */
+@media (max-width: 899px) {
+  .nav { display: none; }
+  .grid3, .grid2, .split { grid-template-columns: 1fr; gap: 1rem; }
+  .big { font-size: 5.2rem; }
+  .line { grid-template-columns: 1fr; gap: .9rem; }
+  .line::before { left: .7rem; right: auto; top: .4rem; bottom: .4rem; width: 2px; height: auto; background: linear-gradient(var(--hot), var(--mid)); transform-origin: top; }
+  .js section:not(.in) .line::before { transform: scaleY(0); }
+  .line::after { left: calc(.7rem - .2rem); top: .4rem; animation-name: travel-down; }
+  @keyframes travel-down { from { top: 0; opacity: 1; } 92% { opacity: 1; } to { top: 100%; opacity: 0; } }
+  .line li { grid-template-columns: 1.5rem 1fr; grid-template-rows: auto auto; column-gap: .75rem; }
+  .line li::before { grid-row: 1; grid-column: 1; justify-self: center; }
+  .line strong { grid-row: 1; grid-column: 2; padding: 0; }
+  .line p { grid-row: 2; grid-column: 2; padding-top: .15rem; }
+  .row { grid-template-columns: 3.2rem 1fr; }
+  .row > div:last-child { grid-column: 2; }
+  .ages li { grid-template-columns: 1.1rem 1fr; row-gap: .1rem; }
+  .ages li p { grid-column: 2; }
+  .refs { columns: 2; column-gap: 1.2rem; }
+}
+@media (max-width: 560px) { .refs { columns: 1; } .stat { font-size: 3rem; } }
+/* Tablet im Hochformat hat viel Höhe, die Schrift darf hier größer werden */
+@media (orientation: portrait) and (min-width: 600px) { html { font-size: clamp(1.2rem, 2.6vw, 1.55rem); } }
+
+/* Wer weniger Bewegung eingestellt hat, sieht alles sofort und ruhig */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .js section .rv, .js section .rv.l, .js section .rv.r, .js section .rv.z, .js section:not(.in) .w { opacity: 1; transform: none; filter: none; }
+  .js section:not(.in) .ring .val { stroke-dashoffset: 84.5; }
+  .js section:not(.in) .line::before, .js section:not(.in) .line li::before { transform: none; }
+  .burst i, .fx, .space, .rings, .meteors, .dusk { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="stars" aria-hidden="true"><i></i><i></i><i></i></div>
+<div class="meteors" aria-hidden="true"><i></i><i></i><i></i></div>
+
+<nav class="nav" aria-label="Folien">
+  <a href="#f1" aria-label="Folie 1: Titel"></a>
+  <a href="#f2" aria-label="Folie 2: Urknall heißt nicht: Anfang von allem"></a>
+  <a href="#f3" aria-label="Folie 3: Die ersten Momente"></a>
+  <a href="#f4" aria-label="Folie 4: Warum wir das glauben"></a>
+  <a href="#f5" aria-label="Folie 5: Gab es einen echten Anfang?"></a>
+  <a href="#f6" aria-label="Folie 6: Die Dunkle Energie entscheidet"></a>
+  <a href="#f7" aria-label="Folie 7: Ende 1: Der Wärmetod"></a>
+  <a href="#f8" aria-label="Folie 8: Ende 2 und 3: Zwei schnellere Enden"></a>
+  <a href="#f9" aria-label="Folie 9: Die Antwort"></a>
+  <a href="#f10" aria-label="Folie 10: Quellen"></a>
+</nav>
+
+<main>
+<section id="f1" class="both in">
+  <div class="burst" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="body">
+    <h1 class="rv">Hatte das Universum einen Anfang, und hat es ein Ende?</h1>
+    <p class="sub rv">Was die Kosmologie heute belegen kann und wo sie an ihre Grenze kommt</p>
+    <div class="temp rv" aria-hidden="true"></div>
+  </div>
+  <footer><p class="src">Wischen, scrollen oder Pfeiltasten</p><div class="pager"><span>1 / 10</span><a href="#f2">Weiter</a></div></footer>
+</section>
+
+<section id="f2" class="hot">
+  <div class="space" aria-hidden="true"><i></i><i></i></div>
+  <h2 class="rv">Urknall heißt nicht: Anfang von allem</h2>
+  <div class="body">
+    <div class="split">
+      <div class="rv l"><p class="big">13,8</p><p class="unit">Milliarden Jahre</p></div>
+      <div class="lead">
+        <p class="rv r">So lange dehnt sich das Universum schon aus seinem heißen, dichten Frühzustand aus.</p>
+        <p class="rv r">Was davor war, verrät diese Zahl nicht. Darum steckt in der Frage eine zweite: Gab es überhaupt ein Davor?</p>
+      </div>
+    </div>
+  </div>
+  <footer><p class="src">Quelle: [1] Planck: 13,797 ± 0,023 Mrd. Jahre; [2] NASA</p><div class="pager"><a href="#f1">Zurück</a><span>2 / 10</span><a href="#f3">Weiter</a></div></footer>
+</section>
+
+<section id="f3" class="hot">
+  <h2 class="rv">Die ersten Momente</h2>
+  <div class="body">
+    <ol class="line">
+      <li class="rv" style="--c:#F2A93B;--d:1.4rem;--i:0"><strong>Bruchteil einer Sekunde</strong><p>Inflation, eine extrem schnelle Ausdehnung (führendes Modell)</p></li>
+      <li class="rv" style="--c:#E8AD64;--d:1.25rem;--i:1"><strong>1 Sekunde</strong><p>rund 10 Milliarden Grad Celsius</p></li>
+      <li class="rv" style="--c:#DEB18E;--d:1.1rem;--i:2"><strong>5 Minuten</strong><p>Das meiste Helium von heute ist entstanden</p></li>
+      <li class="rv" style="--c:#D3B4B7;--d:.95rem;--i:3"><strong>380.000 Jahre</strong><p>Die ersten Atome entstehen, das Universum wird durchsichtig</p></li>
+      <li class="rv" style="--c:#C9B8E0;--d:.8rem;--i:4"><strong>280 Millionen Jahre</strong><p>MoM-z14, die fernste bestätigte Galaxie</p></li>
+    </ol>
+  </div>
+  <footer><p class="src">Quelle: [2] NASA; [3] Guth; [4] Naidu et al.</p><div class="pager"><a href="#f2">Zurück</a><span>3 / 10</span><a href="#f4">Weiter</a></div></footer>
+</section>
+
+<section id="f4" class="hot">
+  <h2 class="rv">Warum wir das glauben</h2>
+  <div class="body">
+    <div class="grid3">
+      <article class="card rv z"><div class="ico gal" aria-hidden="true"><i style="--x:-1.5rem;--dl:0s"></i><i style="--x:1.5rem;--dl:-1s"></i><i style="--x:-.8rem;--dl:-2s"></i><i style="--x:.8rem;--dl:-.5s"></i></div><h3 style="margin:.8rem 0 .5rem">Galaxien entfernen sich.</h3><p>Je weiter weg, desto schneller. Hubble zeigte das 1929.</p></article>
+      <article class="card rv z"><div class="ico atom" aria-hidden="true"><i></i><i></i></div><h3 style="margin:.8rem 0 .5rem">Die leichten Elemente passen.</h3><p>Ihre Häufigkeit stimmt insgesamt mit der Rechnung für die ersten Minuten überein.</p></article>
+      <article class="card rv z"><div class="ico echo" aria-hidden="true"><i></i><i></i><i></i></div><h3 style="margin:.8rem 0 .5rem">Das Nachglühen ist messbar.</h3><p>Penzias und Wilson maßen die Hintergrundstrahlung 1965, Planck kartierte sie später präzise.</p></article>
+    </div>
+  </div>
+  <footer><p class="src">Quelle: [5] Hubble; [6] Particle Data Group; [7] Penzias &amp; Wilson; [1] Planck</p><div class="pager"><a href="#f3">Zurück</a><span>4 / 10</span><a href="#f5">Weiter</a></div></footer>
+</section>
+
+<section id="f5" class="both">
+  <h2 class="rv">Gab es einen echten Anfang?</h2>
+  <div class="body">
+    <div class="rows">
+      <div class="row rv l" style="--c:var(--hot)"><div class="ico wall" aria-hidden="true"><i></i></div><h3>Eine Grenze</h3><div><p>Ein Raum, der sich im Mittel ausdehnt, lässt sich nicht beliebig weit in die Vergangenheit fortsetzen. Was an dieser Grenze geschah, sagt der Satz nicht.</p><p class="who">(Borde, Guth, Vilenkin 2003)</p></div></div>
+      <div class="row rv l" style="--c:var(--mid)"><div class="ico blob" aria-hidden="true"><i></i></div><h3>Kein Rand</h3><div><p>Das Universum könnte sich ohne scharfe Anfangskante beschreiben lassen.</p><p class="who">(Hartle, Hawking 1983)</p></div></div>
+      <div class="row rv l" style="--c:var(--cold)"><div class="ico loop" aria-hidden="true"><i></i></div><h3>Kein Anfang</h3><div><p>Zyklische Modelle kennen immer neue Phasen, andere Inflationsmodelle lassen sich in die Vergangenheit fortsetzen.</p><p class="who">(Steinhardt, Turok 2002; Easson, Lesnefsky 2024)</p></div></div>
+    </div>
+    <p class="say rv" style="color:var(--hot)">Beobachtungen entscheiden das bisher nicht.</p>
+  </div>
+  <footer><p class="src">Quelle: [8] [9] [10] [11]</p><div class="pager"><a href="#f4">Zurück</a><span>5 / 10</span><a href="#f6">Weiter</a></div></footer>
+</section>
+
+<section id="f6" class="both">
+  <h2 class="rv">Die Dunkle Energie entscheidet</h2>
+  <div class="body">
+    <div class="split">
+      <div class="energy rv l">
+        <svg class="ring" viewBox="0 0 100 100" aria-hidden="true"><circle class="track" cx="50" cy="50" r="42"></circle><circle class="val" cx="50" cy="50" r="42"></circle></svg>
+        <div><p class="stat">Rund 68 %</p><p class="stat-label">des Energieinhalts im Universum</p></div>
+      </div>
+      <ul class="points">
+        <li class="rv"><i class="dot" style="--c:var(--hot);--d:.7rem;--i:0" aria-hidden="true"></i><span>Seit 1998 ist bekannt: Die Ausdehnung beschleunigt sich.</span></li>
+        <li class="rv"><i class="dot" style="--c:var(--hot);--d:.7rem;--i:1" aria-hidden="true"></i><span>DESI 2025: Die Daten bevorzugen eine veränderliche Dunkle Energie, mit 2,8 bis 4,2 Sigma. Als Entdeckung gelten üblicherweise erst 5 Sigma.</span></li>
+        <li class="rv"><i class="dot" style="--c:var(--hot);--d:.7rem;--i:2" aria-hidden="true"></i><span>Son et al. 2025 sehen sogar eine beginnende Abbremsung. Wiseman et al. widersprechen.</span></li>
+      </ul>
+    </div>
+  </div>
+  <footer><p class="src">Quelle: [1] Planck; [12] Riess et al.; [13] Perlmutter et al.; [14] DESI; [15] Son et al.; [16] Wiseman et al.</p><div class="pager"><a href="#f5">Zurück</a><span>6 / 10</span><a href="#f7">Weiter</a></div></footer>
+</section>
+
+<section id="f7" class="cold">
+  <div class="dusk" aria-hidden="true"></div>
+  <h2 class="rv">Ende 1: Der Wärmetod</h2>
+  <p class="muted rv" style="font-size:1.15rem">Das Standardbild, wenn die Dunkle Energie konstant bleibt.</p>
+  <div class="body">
+    <ol class="ages">
+      <li class="rv"><i class="dot" style="--c:#7BD3DC;--d:1.1rem;--i:0" aria-hidden="true"></i><strong>10¹⁴ Jahre</strong><p>Es entstehen keine neuen Sterne mehr</p></li>
+      <li class="rv"><i class="dot" style="--c:#6BB7C0;--d:.95rem;--i:1" aria-hidden="true"></i><strong>10³⁷ Jahre</strong><p>Protonen könnten zerfallen (hypothetisch, Spanne 10³² bis 10⁴⁹)</p></li>
+      <li class="rv"><i class="dot" style="--c:#5C9BA4;--d:.8rem;--i:2" aria-hidden="true"></i><strong>10⁶⁵ Jahre</strong><p>Schwarze Löcher von Sternmasse sind verdampft</p></li>
+      <li class="rv"><i class="dot" style="--c:#4C7F88;--d:.65rem;--i:3" aria-hidden="true"></i><strong>10⁹⁸ Jahre</strong><p>Schwarze Löcher von Galaxienmasse sind verdampft</p></li>
+      <li class="rv"><i class="dot" style="--c:#3C626C;--d:.5rem;--i:4" aria-hidden="true"></i><strong>Ab 10¹⁰⁰ Jahren</strong><p>Die dunkle Ära</p></li>
+    </ol>
+    <p class="say rv" style="color:var(--cold)">Die Zeit läuft weiter, aber es passiert fast nichts mehr.</p>
+  </div>
+  <footer><p class="src">Quelle: [17] Adams &amp; Laughlin</p><div class="pager"><a href="#f6">Zurück</a><span>7 / 10</span><a href="#f8">Weiter</a></div></footer>
+</section>
+
+<section id="f8" class="cold">
+  <div class="rings rip" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="rings crunch" aria-hidden="true"><i></i><i></i><i></i></div>
+  <h2 class="rv">Ende 2 und 3: Zwei schnellere Enden</h2>
+  <div class="body">
+    <div class="grid2 ends">
+      <article class="card rv l" style="--c:var(--hot)">
+        <div class="fx" aria-hidden="true"><i style="--a:0deg;--k:0"></i><i style="--a:45deg;--k:3"></i><i style="--a:90deg;--k:6"></i><i style="--a:135deg;--k:1"></i><i style="--a:180deg;--k:4"></i><i style="--a:225deg;--k:7"></i><i style="--a:270deg;--k:2"></i><i style="--a:315deg;--k:5"></i></div>
+        <h3>Big Rip: Die Dunkle Energie wird stärker</h3>
+        <p class="muted" style="margin-bottom:.6rem">Im Beispielmodell (w = -3/2) in rund 20 Mrd. Jahren.</p>
+        <ul><li>60 Millionen Jahre vorher: Die Milchstraße zerfällt</li><li>3 Monate vorher: Das Sonnensystem löst sich auf</li><li>30 Minuten vorher: Die Erde explodiert</li></ul>
+      </article>
+      <article class="card rv r" style="--c:var(--cold)">
+        <div class="fx crunch" aria-hidden="true"><i style="--a:0deg;--k:0"></i><i style="--a:45deg;--k:3"></i><i style="--a:90deg;--k:6"></i><i style="--a:135deg;--k:1"></i><i style="--a:180deg;--k:4"></i><i style="--a:225deg;--k:7"></i><i style="--a:270deg;--k:2"></i><i style="--a:315deg;--k:5"></i></div>
+        <h3>Big Crunch: Die Ausdehnung kehrt um</h3>
+        <p class="muted" style="margin-bottom:.6rem">Im Modell von Luu, Qiu und Tye:</p>
+        <ul><li>In rund 11 Mrd. Jahren: größte Ausdehnung</li><li>In rund 20 Mrd. Jahren: Kollaps</li><li>Gesamtlebensdauer: 33 Mrd. Jahre</li></ul>
+      </article>
+    </div>
+    <p class="say rv" style="color:var(--mid)">Beides sind Modellrechnungen, keine Vorhersagen.</p>
+  </div>
+  <footer><p class="src">Quelle: [18] Caldwell et al.; [19] Luu, Qiu, Tye; [20] Cornell Chronicle</p><div class="pager"><a href="#f7">Zurück</a><span>8 / 10</span><a href="#f9">Weiter</a></div></footer>
+</section>
+
+<section id="f9" class="both">
+  <h2 class="rv">Die Antwort</h2>
+  <div class="body">
+    <div class="grid3 verdict">
+      <div class="rv z" style="--c:var(--hot)"><i class="dot" style="--i:0" aria-hidden="true"></i><h3>Gesichert:</h3><p>Vor rund 13,8 Mrd. Jahren war das Universum heiß und dicht. Seitdem dehnt es sich aus.</p></div>
+      <div class="rv z" style="--c:var(--mid)"><i class="dot" style="--i:1" aria-hidden="true"></i><h3>Wahrscheinlich:</h3><p>Sterne und Galaxien haben ein Ablaufdatum, egal welches Szenario stimmt.</p></div>
+      <div class="rv z" style="--c:var(--cold)"><i class="dot" style="--i:2" aria-hidden="true"></i><h3>Offen:</h3><p>Ob Raum und Zeit selbst einen Anfang oder ein Ende haben.</p></div>
+    </div>
+    <p class="final"><span class="w" style="--w:0">Der</span> <span class="w" style="--w:1">Anfang</span> <span class="w" style="--w:2">unseres</span> <span class="w" style="--w:3">heißen</span> <span class="w" style="--w:4">Kosmos</span> <span class="w" style="--w:5">ist</span> <span class="w" style="--w:6">belegt.</span> <span class="w" style="--w:7">Der</span> <span class="w" style="--w:8">Anfang</span> <span class="w" style="--w:9">von</span> <span class="w" style="--w:10">allem</span> <span class="w" style="--w:11">ist</span> <span class="w" style="--w:12">es</span> <span class="w" style="--w:13">nicht.</span></p>
+  </div>
+  <footer><div class="pager"><a href="#f8">Zurück</a><span>9 / 10</span><a href="#f10">Weiter</a></div></footer>
+</section>
+
+<section id="f10">
+  <h2 class="rv">Quellen</h2>
+  <div class="body">
+    <div class="refs rv">
+      <p>1. Planck Collaboration (2020). Planck 2018 results VI: Cosmological parameters. A&amp;A 641, A6. <a href="https://doi.org/10.1051/0004-6361/201833910">https://doi.org/10.1051/0004-6361/201833910</a></p>
+      <p>2. NASA Science. Universe Overview. <a href="https://science.nasa.gov/universe/overview/">https://science.nasa.gov/universe/overview/</a></p>
+      <p>3. Guth, A. H. (1981). Inflationary universe. Phys. Rev. D 23, 347. <a href="https://doi.org/10.1103/PhysRevD.23.347">https://doi.org/10.1103/PhysRevD.23.347</a></p>
+      <p>4. Naidu, R. P. et al. A Cosmic Miracle. Open Journal of Astrophysics. <a href="https://arxiv.org/abs/2505.11263">https://arxiv.org/abs/2505.11263</a></p>
+      <p>5. Hubble, E. (1929). PNAS 15(3), 168-173. <a href="https://doi.org/10.1073/pnas.15.3.168">https://doi.org/10.1073/pnas.15.3.168</a></p>
+      <p>6. Particle Data Group (2026). Big Bang Nucleosynthesis. <a href="https://pdgweb.lbl.gov/2026/reviews/rpp2026-rev-bbang-nucleosynthesis.pdf">https://pdgweb.lbl.gov/2026/reviews/rpp2026-rev-bbang-nucleosynthesis.pdf</a></p>
+      <p>7. Penzias, A. A.; Wilson, R. W. (1965). ApJ 142, 419-421. <a href="https://doi.org/10.1086/148307">https://doi.org/10.1086/148307</a></p>
+      <p>8. Borde, A.; Guth, A. H.; Vilenkin, A. (2003). Phys. Rev. Lett. 90, 151301. <a href="https://doi.org/10.1103/PhysRevLett.90.151301">https://doi.org/10.1103/PhysRevLett.90.151301</a></p>
+      <p>9. Hartle, J. B.; Hawking, S. W. (1983). Wave function of the Universe. Phys. Rev. D 28, 2960. <a href="https://doi.org/10.1103/PhysRevD.28.2960">https://doi.org/10.1103/PhysRevD.28.2960</a></p>
+      <p>10. Steinhardt, P. J.; Turok, N. (2002). A Cyclic Model of the Universe. Science. <a href="https://doi.org/10.1126/science.1070462">https://doi.org/10.1126/science.1070462</a></p>
+      <p>11. Easson, D. A.; Lesnefsky, J. E. (2024). Inflationary resolution of the initial singularity. <a href="https://arxiv.org/abs/2402.13031">https://arxiv.org/abs/2402.13031</a></p>
+      <p>12. Riess, A. G. et al. (1998). AJ 116, 1009. <a href="https://doi.org/10.1086/300499">https://doi.org/10.1086/300499</a></p>
+      <p>13. Perlmutter, S. et al. (1999). ApJ 517, 565. <a href="https://doi.org/10.1086/307221">https://doi.org/10.1086/307221</a></p>
+      <p>14. DESI Collaboration (2025). DESI DR2 Results II. Phys. Rev. D 112, 083515. <a href="https://arxiv.org/abs/2503.14738">https://arxiv.org/abs/2503.14738</a></p>
+      <p>15. Son, J. et al. (2025). Strong progenitor age bias in supernova cosmology II. MNRAS 544(1), 975-987. <a href="https://doi.org/10.1093/mnras/staf1685">https://doi.org/10.1093/mnras/staf1685</a></p>
+      <p>16. Wiseman, P. et al. Still Accelerating. Angenommen bei MNRAS. <a href="https://arxiv.org/abs/2601.13785">https://arxiv.org/abs/2601.13785</a></p>
+      <p>17. Adams, F. C.; Laughlin, G. (1997). A Dying Universe. Rev. Mod. Phys. 69, 337. <a href="https://doi.org/10.1103/RevModPhys.69.337">https://doi.org/10.1103/RevModPhys.69.337</a></p>
+      <p>18. Caldwell, R. R.; Kamionkowski, M.; Weinberg, N. N. (2003). Phantom Energy and Cosmic Doomsday. Phys. Rev. Lett. 91, 071301. <a href="https://doi.org/10.1103/PhysRevLett.91.071301">https://doi.org/10.1103/PhysRevLett.91.071301</a></p>
+      <p>19. Luu, H. N.; Qiu, Y.-C.; Tye, S.-H. H. (2025). The lifespan of our universe. JCAP 2025(09), 055. <a href="https://doi.org/10.1088/1475-7516/2025/09/055">https://doi.org/10.1088/1475-7516/2025/09/055</a></p>
+      <p>20. Cornell Chronicle (1. Oktober 2025). <a href="https://news.cornell.edu/node/331616">https://news.cornell.edu/node/331616</a></p>
+    </div>
+  </div>
+  <footer><p class="src">Sternenhimmel und Effekte: mit CSS erzeugt, rein dekorativ, keine astronomischen Aufnahmen.</p><div class="pager"><a href="#f9">Zurück</a><span>10 / 10</span></div></footer>
+</section>
+</main>
+
+<script>
+// Nur Komfort: Pfeiltasten, Einblendungen beim Blättern und die Markierung am Rand.
+// Fehlt das Skript, etwa in der iPad-Vorschau, bleibt alles sichtbar und per Wischen bedienbar.
+(function () {
+  if (!('IntersectionObserver' in window)) return;
+  var slides = [].slice.call(document.querySelectorAll('section'));
+  var dots = document.querySelectorAll('.nav a');
+  var keys = { ArrowRight: 1, ArrowDown: 1, PageDown: 1, ' ': 1, ArrowLeft: -1, ArrowUp: -1, PageUp: -1 };
+
+  // Die Klasse kommt erst hier, damit ein Skriptfehler nie Inhalte versteckt
+  slides.forEach(function (slide) {
+    [].forEach.call(slide.querySelectorAll('.rv'), function (el, i) { el.style.setProperty('--n', i); });
+  });
+  document.documentElement.classList.add('js');
+
+  // Die Sterne wandern beim Scrollen verschieden schnell. Der Wert steht nur am Sternenhimmel, damit nicht die ganze Seite neu rechnet
+  var sky = document.querySelector('.stars'), waiting = false;
+  addEventListener('scroll', function () {
+    if (waiting) return;
+    waiting = true;
+    requestAnimationFrame(function () { sky.style.setProperty('--sy', Math.round(scrollY)); waiting = false; });
+  }, { passive: true });
+
+  var watch = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.intersectionRatio >= 0.35) {
+        entry.target.classList.add('in');
+        [].forEach.call(dots, function (dot, i) {
+          if (slides[i] === entry.target) dot.setAttribute('aria-current', 'true');
+          else dot.removeAttribute('aria-current');
+        });
+      } else if (!entry.isIntersecting) {
+        entry.target.classList.remove('in'); // beim Zurückblättern läuft die Einblendung erneut
+      }
+    });
+  }, { threshold: [0, 0.35] });
+  slides.forEach(function (slide) { watch.observe(slide); });
+
+  addEventListener('keydown', function (event) {
+    var step = keys[event.key];
+    if (!step || event.altKey || event.ctrlKey || event.metaKey) return;
+    event.preventDefault();
+    var now = 0, best = Infinity;
+    slides.forEach(function (slide, i) {
+      var distance = Math.abs(slide.getBoundingClientRect().top);
+      if (distance < best) { best = distance; now = i; }
+    });
+    slides[Math.max(0, Math.min(slides.length - 1, now + step))].scrollIntoView();
+  });
+})();
+</script>
+</body>
+</html>
