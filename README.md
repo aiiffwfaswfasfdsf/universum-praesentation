@@ -1,6 +1,6 @@
 # [Präsentation öffnen: aiiffwfaswfasfdsf.github.io/universum-praesentation](https://aiiffwfaswfasfdsf.github.io/universum-praesentation/)
 
-**Hatte das Universum einen Anfang, und was passiert als Allerletztes?** Eine animierte Präsentation mit 11 Folien und Quellen.
+**Vom heißesten Moment zur ewigen Kälte:** eine animierte Präsentation über den Anfang des Universums und den Kältetod, mit echten Weltraumbildern und ohne nötiges Physikwissen. Auf jeder Folie steht unter „Was ich dazu sagen kann“ ein Vortragstext.
 
 ## Auf dem iPad
 
