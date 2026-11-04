@@ -2,6 +2,8 @@
 
 **Vom heißesten Moment zur ewigen Kälte:** eine animierte Präsentation über den Anfang des Universums und den Kältetod, mit echten Weltraumbildern und ohne nötiges Physikwissen. Auf jeder Folie steht unter „Was ich dazu sagen kann“ ein Vortragstext.
 
+**Fassung ohne den Knopf für den Vortragstext, zum Vorzeigen:** [https://aiiffwfaswfasfdsf.github.io/universum-praesentation/ohne-button.html](https://aiiffwfaswfasfdsf.github.io/universum-praesentation/ohne-button.html)
+
 ## Auf dem iPad
 
 Tippe oben auf den Link. Die Seite öffnet sich in Safari, du musst nichts installieren oder eintippen. Mit dem Finger wischst du von Folie zu Folie.
